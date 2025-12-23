@@ -53,13 +53,13 @@ class SimpleTelnetProtocol(basic.LineReceiver):
 
     def _send_telnet_negotiation(self):
         self.transport.write(
-            b"\xff\xfb\x03"  # IAC WILL SGA
-            b"\xff\xfb\x00"  # IAC WILL BINARY
-            b"\xff\xfd\x00"  # IAC DO BINARY
-            b"\xff\xfd\x1f"  # IAC DO NAWS
-            b"\xff\xfd\x18"  # IAC DO TTYPE
-            b"\xff\xfd\x27"  # IAC DO NEW-ENVIRON
-            b"\xff\xfd\x22"  # IAC DO LINEMODE
+            b"\xff\xfb\x03"
+            b"\xff\xfb\x00"
+            b"\xff\xfd\x00"
+            b"\xff\xfd\x1f"
+            b"\xff\xfd\x18"
+            b"\xff\xfd\x27"
+            b"\xff\xfd\x22"
             b"\r\n"
         )
         reactor.callLater(0.15, self._request_ttype)
