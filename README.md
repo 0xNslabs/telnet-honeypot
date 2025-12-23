@@ -1,21 +1,24 @@
 # Simple Telnet Honeypot Server
 
 ## Introduction
-The Simple Telnet Honeypot Server offers cybersecurity professionals and enthusiasts a straightforward tool for capturing and analyzing Telnet-based interactions. This Python-scripted server, built upon the Twisted network programming framework, simulates a Telnet server to log unauthorized access attempts and helps in identifying potential security breaches.
+The Simple Telnet Honeypot Server is a lightweight, low-interaction Telnet service intended for capturing and analyzing unauthorized connection and authentication attempts. Implemented in Python using the Twisted networking framework, it emulates common Telnet behaviors (including basic option negotiation) while logging both credentials and raw network bytes to assist in incident response and threat research.
 
 ## Features
-- **Low-Interaction Honeypot**: Simulates a Telnet server to safely log authentication attempts without high risk.
-- **Configurable Settings**: The host and port settings can be easily modified using command-line arguments.
-- **Extensive Logging**: Every interaction, including login credentials, is recorded for in-depth security auditing.
-- **Interactive Response Simulation**: Mimics a live Telnet service, providing automated responses to capture more detailed information.
-- **Educational Resource**: Great for learning about Telnet service vulnerabilities and network security monitoring.
+- **Low-Interaction Honeypot**: Simulates a Telnet login flow (username/password) without providing a real shell.
+- **Telnet Option Negotiation**: Performs common Telnet negotiations (e.g., SGA/BINARY, NAWS, terminal type) to better match real clients.
+- **Configurable Settings**: Set bind host/port and connection banner using command-line arguments.
+- **Extensive Logging**:
+  - Logs connection metadata and authentication attempts.
+  - Logs **raw received bytes** (hex-encoded, truncated) to help spot unusual payloads and potential zero-day behavior.
+  - Logs Telnet telemetry when available (e.g., terminal type, window size).
+- **Educational Resource**: Useful for learning about Telnet behaviors, brute-force patterns, and defensive monitoring.
 
 ## Requirements
 - Python 3.x
 - Twisted Python library
 
 ## Installation
-Begin by cloning the repository or downloading the `telnet.py` script. Make sure Python and Twisted are installed on your system.
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/0xNslabs/telnet-honeypot.git
@@ -24,21 +27,30 @@ pip install twisted
 ```
 
 ## Usage
-Start the server with the following command, specifying host and port if needed. By default, it binds to all interfaces (0.0.0.0) on port 2323.
+Start the server with the following command. By default, it binds to `0.0.0.0` on port `2323`.
 
 ```bash
 python3 telnet.py --host 0.0.0.0 --port 2323
 ```
 
+Customize the banner shown to clients on connect:
+
+```bash
+python3 telnet.py --host 0.0.0.0 --port 2323 --banner "User Access Verification"
+```
+
 ## Logging
-Interaction logs are saved in telnet_honeypot.log, which contains detailed records of all Telnet commands and login attempts.
+All events are written to `telnet_honeypot.log`, including:
+- New connections (IP/port)
+- Username and password attempts
+- Telnet option telemetry (when negotiated)
+- Raw received bytes (hex), truncated to a safe maximum size per event
 
 ## Simple Telnet Honeypot In Action
 ![Simple Telnet Honeypot in Action](https://raw.githubusercontent.com/0xNslabs/telnet-honeypot/main/PoC.png)
 *The above image showcases the Simple Telnet Honeypot server capturing login attempts.*
 
 ## Other Simple Honeypot Services
-
 Check out the other honeypot services for monitoring various network protocols:
 
 - [DNS Honeypot](https://github.com/0xNslabs/dns-honeypot) - Monitors DNS interactions.
@@ -54,8 +66,8 @@ Check out the other honeypot services for monitoring various network protocols:
 - [TELNET Honeypot](https://github.com/0xNslabs/telnet-honeypot) - Simulates a TELNET server.
 
 ## Security and Compliance
-- **Caution**:  Operate this honeypot within a secure and controlled environment.
+- **Caution**: Operate this honeypot within a secure and controlled environment.
 - **Compliance**: Deploy this honeypot in accordance with applicable laws and regulations.
 
 ## License
-This project is made available under the MIT License. For more information, see the LICENSE file.
+This project is made available under the MIT License. For more information, see the `LICENSE` file.
