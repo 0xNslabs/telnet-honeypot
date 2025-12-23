@@ -248,7 +248,7 @@ def main():
     parser.add_argument(
         "--banner",
         type=str,
-        default="Welcome to the Telnet Honeypot!",
+        default="User Access Verification",
         help="Banner text shown on connect.",
     )
     args = parser.parse_args()
